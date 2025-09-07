@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Shop Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom styles for a cleaner look on number inputs */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        .ad-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af; /* gray-400 */
+            font-size: 0.875rem; /* text-sm */
+            border-radius: 0.5rem; /* rounded-lg */
+            background-color: #374151; /* gray-700 */
+        }
+    </style>
+</head>
+<body class="bg-gray-900 flex flex-col h-screen overflow-hidden">
+
+    <!-- No Internet Overlay -->
+    <div id="offline-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-95 z-50 flex-col items-center justify-center text-center text-white p-8 hidden">
+        <svg class="w-16 h-16 mx-auto mb-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 010 12.728m-12.728 0a9 9 0 010-12.728m12.728 0L5.636 18.364m12.728 0L5.636 5.636"></path></svg>
+        <h2 class="text-2xl font-bold mb-2" data-key="noInternetTitle">No Internet Connection</h2>
+        <p class="text-gray-400" data-key="noInternetMessage">Please connect to the internet to use the app.</p>
+    </div>
+
+    <!-- Adsterra Ad Space: Top -->
+    <header class="h-20 p-2">
+        <div class="ad-placeholder h-full w-full">
+            Ad Space (Top)
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center p-4">
+        <div class="w-full max-w-md mx-auto bg-gray-800 text-white rounded-2xl shadow-2xl p-6 space-y-6">
+            
+            <!-- Header: Title & Language Selector -->
+            <div class="flex justify-between items-center">
+                <h1 class="text-xl font-bold text-cyan-400" data-key="title">Smart Shop Calculator</h1>
+                <div class="relative">
+                    <select id="language-selector" class="bg-gray-700 text-white border border-gray-600 rounded-lg py-2 pl-3 pr-8 appearance-none focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                        <option value="en">English</option>
+                        <option value="hi">हिन्दी</option>
+                        <option value="ta">தமிழ்</option>
+                        <option value="te">తెలుగు</option>
+                        <option value="or">ଓଡ଼ିଆ</option>
+                        <option value="bn">বাংলা</option>
+                        <option value="kn">ಕನ್ನಡ</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seller Rate Section -->
+            <div>
+                <label class="block text-sm font-medium text-gray-400 mb-2" data-key="sellerRate">Seller Rate</label>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">₹</span>
+                        <input type="number" id="seller-price" placeholder="Price" class="w-full bg-gray-700 border border-gray-600 rounded-lg py-3 pl-7 pr-3 focus:outline-none focus:ring-2 focus:ring-cyan-500" value="100">
+                    </div>
+                    <div class="relative">
+                        <input type="number" id="seller-quantity" placeholder="Qty" class="w-full bg-gray-700 border border-gray-600 rounded-lg py-3 px-3 focus:outline-none focus:ring-2 focus:ring-cyan-500" value="1">
+                    </div>
+                    <div>
+                        <select id="seller-unit" class="w-full bg-gray-700 border border-gray-600 rounded-lg py-3 px-3 appearance-none focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                            <optgroup label="Weight">
+                                <option value="kg">Kg</option>
+                                <option value="gm">Gm</option>
+                                <option value="quintal">Quintal</option>
+                                <option value="ton">Ton</option>
+                            </optgroup>
+                            <optgroup label="Volume">
+                                <option value="l">Litre</option>
+                                <option value="ml">ml</option>
+                            </optgroup>
+                            <optgroup label="Length">
+                                <option value="mtr">Mtr</option>
+                                <option value="cm">Cm</option>
+                                <option value="mm">mm</option>
+                                <option value="feet">Feet</option>
+                            </optgroup>
+                            <optgroup label="Count">
+                                <option value="pcs">Pcs</option>
+                                <option value="dozen">Dozen</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buyer Need Section -->
+            <div>
+                <div class="flex justify-between items-center mb-2">
+                    <label class="block text-sm font-medium text-gray-400" data-key="buyerNeed">Buyer Need</label>
+                    
+                    <!-- Toggle Switch -->
+                    <div class="flex items-center space-x-2">
+                        <span id="toggle-label-qty" class="text-sm font-medium text-cyan-400 transition-colors" data-key="qtyLabel">By Quantity</span>
+                        <label for="calc-toggle" class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" value="" id="calc-toggle" class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-600 rounded-full peer peer-focus:ring-2 peer-focus:ring-cyan-500 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                        </label>
+                        <span id="toggle-label-price" class="text-sm font-medium text-gray-500 transition-colors" data-key="priceLabel">By Price</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                     <div class="relative">
+                        <span id="buyer-input-prefix" class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 hidden">₹</span>
+                        <input type="number" id="buyer-input" placeholder="Need Qty" class="w-full bg-gray-700 border border-gray-600 rounded-lg py-3 px-3 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                    </div>
+                    <select id="buyer-unit" class="w-full bg-gray-700 border border-gray-600 rounded-lg py-3 px-3 appearance-none focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                        <!-- Options will be populated by JS -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Result Display -->
+            <div class="bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl p-5 text-center">
+                <h2 id="result-label" class="text-lg font-medium text-white opacity-80" data-key="price">Price</h2>
+                <p id="result" class="text-4xl font-bold text-white mt-1">₹ 0.00</p>
+            </div>
+            
+            <!-- Disclaimer -->
+            <p class="text-xs text-center text-gray-500" data-key="disclaimer">Disclaimer: This app may make mistakes, please double check calculations.</p>
+
+        </div>
+    </main>
+    
+    <!-- Adsterra Ad Space: Bottom -->
+    <footer class="h-20 p-2">
+        <div class="ad-placeholder h-full w-full">
+            Ad Space (Bottom)
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Elements ---
+            const sellerPriceInput = document.getElementById('seller-price');
+            const sellerQuantityInput = document.getElementById('seller-quantity');
+            const sellerUnitSelect = document.getElementById('seller-unit');
+            const buyerInput = document.getElementById('buyer-input');
+            const buyerInputPrefix = document.getElementById('buyer-input-prefix');
+            const buyerUnitSelect = document.getElementById('buyer-unit');
+            const resultDisplay = document.getElementById('result');
+            const resultLabel = document.getElementById('result-label');
+            const languageSelector = document.getElementById('language-selector');
+            const offlineOverlay = document.getElementById('offline-overlay');
+            const calcToggle = document.getElementById('calc-toggle');
+            const toggleLabelQty = document.getElementById('toggle-label-qty');
+            const toggleLabelPrice = document.getElementById('toggle-label-price');
+
+            // --- Translations ---
+            const translations = {
+                en: {
+                    title: "Smart Shop Calculator",
+                    sellerRate: "Seller Rate",
+                    buyerNeed: "Buyer Need",
+                    price: "Price",
+                    quantity: "Quantity",
+                    qtyLabel: "By Quantity",
+                    priceLabel: "By Price",
+                    disclaimer: "Disclaimer: This app may make mistakes, please double check calculations.",
+                    noInternetTitle: "No Internet Connection",
+                    noInternetMessage: "Please connect to the internet to use the app."
+                },
+                hi: {
+                    title: "स्मार्ट दुकान कैलक्यूलेटर",
+                    sellerRate: "विक्रेता दर",
+                    buyerNeed: "क्रेता की आवश्यकता",
+                    price: "कीमत",
+                    quantity: "मात्रा",
+                    qtyLabel: "मात्रा से",
+                    priceLabel: "कीमत से",
+                    disclaimer: "अस्वीकरण: यह ऐप गलतियाँ कर सकता है, कृपया गणनाओं की दोबारा जाँच करें।",
+                    noInternetTitle: "कोई इंटरनेट कनेक्शन नहीं",
+                    noInternetMessage: "ऐप का उपयोग करने के लिए कृपया इंटरनेट से कनेक्ट करें।"
+                },
+                ta: {
+                    title: "ஸ்மார்ட் ஷாப் கால்குலேட்டர்",
+                    sellerRate: "விற்பனையாளர் விலை",
+                    buyerNeed: "வாங்குபவர் தேவை",
+                    price: "விலை",
+                    quantity: "அளவு",
+                    qtyLabel: "அளவு மூலம்",
+                    priceLabel: "விலை மூலம்",
+                    disclaimer: "பொறுப்புத் துறப்பு: இந்த ஆப்ஸ் தவறுகளைச் செய்யலாம், கணக்கீடுகளை இருமுறை சரிபார்க்கவும்.",
+                    noInternetTitle: "இணைய இணைப்பு இல்லை",
+                    noInternetMessage: "பயன்பாட்டைப் பயன்படுத்த இணையத்துடன் இணைக்கவும்."
+                },
+                te: {
+                    title: "స్మార్ట్ షాప్ కాలిక్యులేటర్",
+                    sellerRate: "అమ్మకందారు రేటు",
+                    buyerNeed: "కొనుగోలుదారు అవసరం",
+                    price: "ధర",
+                    quantity: "పరిమాణం",
+                    qtyLabel: "పరిమాణం ద్వారా",
+                    priceLabel: "ధర ద్వారా",
+                    disclaimer: "నిరాకరణ: ఈ యాప్ తప్పులు చేయవచ్చు, దయచేసి లెక్కలను రెండుసార్లు తనిఖీ చేయండి.",
+                    noInternetTitle: "ఇంటర్నెట్ కనెక్షన్ లేదు",
+                    noInternetMessage: "దయచేసి యాప్‌ని ఉపయోగించడానికి ఇంటర్నెట్‌కి కనెక్ట్ చేయండి."
+                },
+                or: {
+                    title: "ସ୍ମାର୍ଟ ଦୋକାନ କାଲକୁଲେଟର |",
+                    sellerRate: "ବିକ୍ରେତା ଦର",
+                    buyerNeed: "କ୍ରେତା ଆବଶ୍ୟକ କରନ୍ତି |",
+                    price: "ମୂଲ୍ୟ",
+                    quantity: "ପରିମାଣ",
+                    qtyLabel: "ପରିମାଣ ଅନୁଯାୟୀ",
+                    priceLabel: "ମୂଲ୍ୟ ଅନୁଯାୟୀ",
+                    disclaimer: "ଦ Disclaimer ର୍ଶନ: ଏହି ଆପ୍ ଭୁଲ୍ କରିପାରେ, ଦୟାକରି ଗଣନାକୁ ଦୁଇଥର ଯାଞ୍ଚ କରନ୍ତୁ |",
+                    noInternetTitle: "କ Internet ଣସି ଇଣ୍ଟରନେଟ୍ ସଂଯୋଗ ନାହିଁ |",
+                    noInternetMessage: "ଆପ୍ ବ୍ୟବహାର କରିବାକୁ ଦୟାକରି ଇଣ୍ଟରନେଟ୍ ସହିତ ସଂଯୋଗ କରନ୍ତୁ |"
+                },
+                bn: {
+                    title: "স্মার্ট শপ ক্যালকুলেটর",
+                    sellerRate: "বিক্রেতার হার",
+                    buyerNeed: "ক্রেতার প্রয়োজন",
+                    price: "মূল্য",
+                    quantity: "পরিমাণ",
+                    qtyLabel: "পরিমাণ দ্বারা",
+                    priceLabel: "মূল্য দ্বারা",
+                    disclaimer: "দাবিত্যাগ: এই অ্যাপটি ভুল করতে পারে, অনুগ্রহ করে গণনাগুলি দুবার চেক করুন।",
+                    noInternetTitle: "কোনও ইন্টারনেট সংযোগ নেই",
+                    noInternetMessage: "অ্যাপটি ব্যবহার করতে অনুগ্রহ করে ইন্টারনেটের সাথে সংযোগ করুন।"
+                },
+                kn: {
+                    title: "ಸ್ಮಾರ್ಟ್ ಶಾಪ್ ಕ್ಯಾಲ್ಕುಲೇಟರ್",
+                    sellerRate: "ಮಾರಾಟಗಾರರ ದರ",
+                    buyerNeed: "ಖರೀದಿದಾರರ ಅಗತ್ಯವಿದೆ",
+                    price: "ಬೆಲೆ",
+                    quantity: "ಪ್ರಮಾಣ",
+                    qtyLabel: "ಪ್ರಮಾಣದಿಂದ",
+                    priceLabel: "ಬೆಲೆಯಿಂದ",
+                    disclaimer: "ಹಕ್ಕು ನಿರಾಕರಣೆ: ಈ ಅಪ್ಲಿಕೇಶನ್ ತಪ್ಪುಗಳನ್ನು ಮಾಡಬಹುದು, ದಯವಿಟ್ಟು ಲೆಕ್ಕಾಚಾರಗಳನ್ನು ಎರಡು ಬಾರಿ ಪರಿಶೀಲಿಸಿ.",
+                    noInternetTitle: "ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವಿಲ್ಲ",
+                    noInternetMessage: "ಅಪ್ಲಿಕೇಶನ್ ಬಳಸಲು ದಯವಿಟ್ಟು ಇಂಟರ್ನೆಟ್‌ಗೆ ಸಂಪರ್ಕಪಡಿಸಿ."
+                }
+            };
+            
+            // --- Unit Data ---
+            const unitGroups = {
+                weight: {
+                    base: 'gm',
+                    units: { gm: 1, kg: 1000, quintal: 100000, ton: 1000000 }
+                },
+                volume: {
+                    base: 'ml',
+                    units: { ml: 1, l: 1000 }
+                },
+                length: {
+                    base: 'mm',
+                    units: { mm: 1, cm: 10, mtr: 1000, feet: 304.8 }
+                },
+                count: {
+                    base: 'pcs',
+                    units: { pcs: 1, dozen: 12 }
+                }
+            };
+
+            // --- Functions ---
+            const getUnitGroup = (unit) => {
+                for (const group in unitGroups) {
+                    if (unitGroups[group].units[unit]) {
+                        return unitGroups[group];
+                    }
+                }
+                return null;
+            };
+
+            const updateBuyerUnits = () => {
+                const selectedSellerUnit = sellerUnitSelect.value;
+                const group = getUnitGroup(selectedSellerUnit);
+                if (!group) return;
+
+                buyerUnitSelect.innerHTML = '';
+                for (const unit in group.units) {
+                    const option = document.createElement('option');
+                    option.value = unit;
+                    option.textContent = unit.charAt(0).toUpperCase() + unit.slice(1);
+                    buyerUnitSelect.appendChild(option);
+                }
+                // Try to keep the same unit if it exists in the new group
+                if (Object.keys(group.units).includes(buyerUnitSelect.value)) {
+                     buyerUnitSelect.value = buyerUnitSelect.value;
+                } else {
+                     buyerUnitSelect.value = selectedSellerUnit;
+                }
+               
+                performCalculation();
+            };
+
+            const performCalculation = () => {
+                const isPriceMode = calcToggle.checked;
+
+                const sellerPrice = parseFloat(sellerPriceInput.value) || 0;
+                const sellerQty = parseFloat(sellerQuantityInput.value) || 0;
+                const sellerUnit = sellerUnitSelect.value;
+
+                const buyerValue = parseFloat(buyerInput.value) || 0;
+                const buyerUnit = buyerUnitSelect.value;
+                
+                const lang = languageSelector.value;
+
+                if (sellerPrice === 0 || sellerQty === 0 || buyerValue === 0) {
+                    if (isPriceMode) {
+                         resultLabel.textContent = translations[lang].quantity;
+                         resultDisplay.textContent = `0.00 ${buyerUnit}`;
+                    } else {
+                         resultLabel.textContent = translations[lang].price;
+                         resultDisplay.textContent = '₹ 0.00';
+                    }
+                    return;
+                }
+
+                const group = getUnitGroup(sellerUnit);
+                if (!group || !group.units[buyerUnit]) {
+                    resultDisplay.textContent = '₹ --.--'; // Incompatible units
+                    return;
+                }
+
+                const sellerQtyInBase = sellerQty * group.units[sellerUnit];
+                
+                if (sellerQtyInBase === 0) {
+                    resultDisplay.textContent = '₹ 0.00';
+                    return;
+                }
+
+                const pricePerBaseUnit = sellerPrice / sellerQtyInBase;
+
+                if (isPriceMode) {
+                    const buyerPrice = buyerValue;
+                    if (pricePerBaseUnit === 0) {
+                        resultDisplay.textContent = `∞ ${buyerUnit}`;
+                        return;
+                    }
+                    const quantityInBase = buyerPrice / pricePerBaseUnit;
+                    const finalQuantity = quantityInBase / group.units[buyerUnit];
+                    
+                    resultLabel.textContent = translations[lang].quantity;
+                    resultDisplay.textContent = `${finalQuantity.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${buyerUnit}`;
+                } else {
+                    const buyerQty = buyerValue;
+                    const buyerQtyInBase = buyerQty * group.units[buyerUnit];
+                    const finalPrice = pricePerBaseUnit * buyerQtyInBase;
+                    
+                    resultLabel.textContent = translations[lang].price;
+                    resultDisplay.textContent = `₹ ${finalPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                }
+            };
+
+            const changeLanguage = () => {
+                const lang = languageSelector.value;
+                const langPack = translations[lang];
+                document.querySelectorAll('[data-key]').forEach(element => {
+                    const key = element.getAttribute('data-key');
+                    if (langPack[key]) {
+                        element.textContent = langPack[key];
+                    }
+                });
+                performCalculation(); // Recalculate to update result label language
+            };
+
+            const updateOnlineStatus = () => {
+                if (navigator.onLine) {
+                    offlineOverlay.classList.add('hidden');
+                    offlineOverlay.classList.remove('flex');
+                } else {
+                    offlineOverlay.classList.remove('hidden');
+                    offlineOverlay.classList.add('flex');
+                    changeLanguage(); // re-translate the message if language was changed while offline
+                }
+            };
+
+            const toggleMode = () => {
+                const isPriceMode = calcToggle.checked;
+
+                if (isPriceMode) { // Calculate Quantity by Price
+                    toggleLabelQty.classList.remove('text-cyan-400');
+                    toggleLabelQty.classList.add('text-gray-500');
+                    toggleLabelPrice.classList.add('text-cyan-400');
+                    toggleLabelPrice.classList.remove('text-gray-500');
+
+                    buyerInputPrefix.classList.remove('hidden');
+                    buyerInput.placeholder = "For Price";
+                    buyerInput.classList.add('pl-7');
+                } else { // Calculate Price by Quantity
+                    toggleLabelPrice.classList.remove('text-cyan-400');
+                    toggleLabelPrice.classList.add('text-gray-500');
+                    toggleLabelQty.classList.add('text-cyan-400');
+                    toggleLabelQty.classList.remove('text-gray-500');
+
+                    buyerInputPrefix.classList.add('hidden');
+                    buyerInput.placeholder = "Need Qty";
+                    buyerInput.classList.remove('pl-7');
+                }
+                buyerInput.value = ''; // Clear input on toggle
+                performCalculation();
+            };
+
+            // --- Event Listeners ---
+            [sellerPriceInput, sellerQuantityInput, buyerInput].forEach(input => {
+                input.addEventListener('input', performCalculation);
+            });
+            [sellerUnitSelect, buyerUnitSelect].forEach(select => {
+                select.addEventListener('change', performCalculation);
+            });
+            sellerUnitSelect.addEventListener('change', updateBuyerUnits);
+            languageSelector.addEventListener('change', changeLanguage);
+            calcToggle.addEventListener('change', toggleMode);
+
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+
+            // --- Initial Setup ---
+            updateOnlineStatus();
+            updateBuyerUnits();
+            performCalculation();
+            changeLanguage();
+        });
+    </script>
+</body>
+</html>
